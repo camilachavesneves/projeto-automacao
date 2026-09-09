@@ -1,0 +1,35 @@
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+    branches: [ "main", "master" ]
+  push:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+    name: Build & Continuous Integration
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Simulação de testes / CI
+        run: |
+          echo "Executando testes automatizados e verificação de qualidade..."
+          echo "CI concluído com sucesso!"
+
+  deploy:
+    name: Deployment & Continuous Delivery
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Simulação de deploy / CD
+        run: |
+          echo "Iniciando implantação da aplicação..."
+          echo "Deploy realizado com sucesso!"
