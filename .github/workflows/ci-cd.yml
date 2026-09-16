@@ -1,35 +1,31 @@
 name: CI/CD Pipeline
 
 on:
-  pull_request:
-    branches: [ "main", "master" ]
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  build:
-    name: Build & Continuous Integration
+  test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
+    - name: Checkout do código
+      uses: actions/checkout@v4
 
-      - name: Simulação de testes / CI
-        run: |
-          echo "Executando testes automatizados e verificação de qualidade..."
-          echo "CI concluído com sucesso!"
+    - name: Configurar Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
 
-  deploy:
-    name: Deployment & Continuous Delivery
-    needs: build
-    runs-on: ubuntu-latest
+    - name: Executar testes unitários
+      run: node --test
 
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
-      - name: Simulação de deploy / CD
-        run: |
-          echo "Iniciando implantação da aplicação..."
-          echo "Deploy realizado com sucesso!"
+    - name: Enviar notificação no Discord
+      uses: Ilshadur/action-discord@0.3.2
+      if: always() # Garante que envia alerta mesmo se os testes falharem
+      env:
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      with:
+        args: 'O pipeline do projeto projeto-automacao foi executado!'
