@@ -23,9 +23,9 @@ jobs:
       run: node --test
 
     - name: Enviar notificação no Discord
-      uses: Ilshadur/action-discord@master
       if: always()
-      env:
-        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-      with:
-        args: 'O pipeline do projeto projeto-automacao foi executado com sucesso!'
+      run: |
+        curl -H "Content-Type: application/json" \
+             -X POST \
+             -d '{"content": "🚀 O pipeline do projeto projeto-automacao foi executado na PR!"}' \
+             "${{ secrets.DISCORD_WEBHOOK }}"
